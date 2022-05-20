@@ -116,6 +116,7 @@ public class BasePropertyDeclaration {
             }
             if (jsonNode == null) {
                 // cannot find any matched type
+                jsonNode = new JsonNullNode();
                 defaultHandler.handle(this.typeSpec.getTypeName());
             }
         }
@@ -219,32 +220,36 @@ public class BasePropertyDeclaration {
     private void applyVariablesToSingleParameter(Map<String, Object> variableMap) {
         if (typeSpec.getSingleParam().startsWith(Token.VARIABLE.getTag())) {
             Object variable = variableMap.get(typeSpec.getSingleParam().substring(1));
-            if (variable instanceof Collection<?>) {
-                Collection<?> collectionVariable = (Collection<?>) variable;
-                typeSpec.setSingleParam(null);
-                List<String> elements = collectionVariable.stream()
-                        .map(Object::toString)
-                        .collect(Collectors.toList());
-                typeSpec.setListParam(elements);
+            if(Objects.nonNull(variable)) {
+                if (variable instanceof Collection<?>) {
+                    Collection<?> collectionVariable = (Collection<?>) variable;
+                    typeSpec.setSingleParam(null);
+                    List<String> elements = collectionVariable.stream()
+                            .map(Object::toString)
+                            .collect(Collectors.toList());
+                    typeSpec.setListParam(elements);
 
-            } else if (variable.getClass().isArray()) {
-                Object[] arrayVariable = (Object[]) variable;
-                typeSpec.setSingleParam(null);
-                List<String> elements = Arrays.stream(arrayVariable)
-                        .map(Object::toString)
-                        .collect(Collectors.toList());
-                typeSpec.setListParam(elements);
+                } else if (variable.getClass().isArray()) {
+                    Object[] arrayVariable = (Object[]) variable;
+                    typeSpec.setSingleParam(null);
+                    List<String> elements = Arrays.stream(arrayVariable)
+                            .map(Object::toString)
+                            .collect(Collectors.toList());
+                    typeSpec.setListParam(elements);
 
-            } else if (variable instanceof Map) {
-                typeSpec.setSingleParam(null);
-                typeSpec.getListParam().clear();
-                Map<String, Object> mapVariable = (Map<String, Object>) variable;
-                Map<String, String> config = mapVariable.entrySet().stream()
-                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
-                typeSpec.setMapParam(config);
+                } else if (variable instanceof Map) {
+                    typeSpec.setSingleParam(null);
+                    typeSpec.getListParam().clear();
+                    Map<String, Object> mapVariable = (Map<String, Object>) variable;
+                    Map<String, String> config = mapVariable.entrySet().stream()
+                            .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString()));
+                    typeSpec.setMapParam(config);
 
-            } else {
-                typeSpec.setSingleParam(variable.toString());
+                } else {
+                    typeSpec.setSingleParam(variable.toString());
+                }
+            }else{
+                typeSpec.setSingleParam(null);
             }
         }
     }

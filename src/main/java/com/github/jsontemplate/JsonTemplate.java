@@ -23,6 +23,7 @@ import com.github.jsontemplate.jsonbuild.JsonNode;
 import com.github.jsontemplate.jsonbuild.JsonWrapperNode;
 import com.github.jsontemplate.modelbuild.BasePropertyDeclaration;
 import com.github.jsontemplate.modelbuild.JsonTemplateTreeListener;
+import com.github.jsontemplate.modelbuild.handler.DefaultBuildHandler;
 import com.github.jsontemplate.modelbuild.handler.DefaultJsonBuildHandler;
 import com.github.jsontemplate.modelbuild.handler.DefaultTypeBuildHandler;
 import com.github.jsontemplate.valueproducer.*;
@@ -66,12 +67,17 @@ public class JsonTemplate {
     private Map<String, IValueProducer> producerMap = new HashMap<>(32);
     private Map<String, JsonNode> variableNodeMap = new HashMap<>(32);
     private JsonNode rootNode;
-
+    private DefaultBuildHandler defaultBuildHandler;
     public JsonTemplate(String template) {
         this.template = template;
         initializeProducerMap();
     }
 
+    public  JsonTemplate(String template,DefaultBuildHandler defaultBuildHandler) {
+        this.template = template;
+        initializeProducerMap();
+        this.defaultBuildHandler=defaultBuildHandler;
+    }
     /**
      * Registers a variable which is used in the template.
      * Example:
@@ -260,8 +266,11 @@ public class JsonTemplate {
         rootDeclaration.applyVariablesToParameters(variableMap);
 
         JsonBuilder builder = new JsonBuilder();
-        rootDeclaration.buildJsonTemplate(builder, producerMap, typeMap, variableNodeMap, defaultTypeName, new DefaultJsonBuildHandler());
-
+        if(this.defaultBuildHandler !=null){
+            rootDeclaration.buildJsonTemplate(builder, producerMap, typeMap, variableNodeMap, defaultTypeName,this.defaultBuildHandler);
+        }else{
+            rootDeclaration.buildJsonTemplate(builder, producerMap, typeMap, variableNodeMap, defaultTypeName, new DefaultJsonBuildHandler());
+        }
         return builder.build();
     }
 

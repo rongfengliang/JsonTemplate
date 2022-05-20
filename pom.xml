@@ -6,7 +6,7 @@
 
     <groupId>com.github.json-template</groupId>
     <artifactId>jsontemplate</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A library for generating json</description>
@@ -155,20 +155,6 @@
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

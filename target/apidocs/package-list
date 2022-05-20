@@ -1,0 +1,7 @@
+com.github.jsontemplate
+com.github.jsontemplate.antlr4
+com.github.jsontemplate.jsonbuild
+com.github.jsontemplate.jsonbuild.supplier
+com.github.jsontemplate.modelbuild
+com.github.jsontemplate.modelbuild.handler
+com.github.jsontemplate.valueproducer
